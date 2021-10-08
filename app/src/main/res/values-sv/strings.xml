@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Ben-Dix</string>
+
+    <string name="ScanCustomerBarcode">Skanna ditt kundkort</string>
+    <string name="scan_to_add_products">Skanna för att lägga till produkter!</string>
+    <string name="ask_quotation">Begär Offert</string>
+    <string name="buy">Köp</string>
+    <string name="thank_you_for_your_order">Tack för din beställning!</string>
+    <string name="msg_email_confirmation">Ett e-postmeddelande har skickats med bekräftelsen!</string>
+    <string name="msg_contact_quotation">Vi kontaktar dig snart med vårt offert!</string>
+    <string name="thank_you_for_your_request">Tack för din förfrågan!</string>
+    <string name="order_details">Orderdetaljer:</string>
+    <string name="order_number">Ordernummer:</string>
+    <string name="quotation_number">Offertnummer:</string>
+    <string name="quotation_products">Offertprodukter:</string>
+    <string name="log_in_here">Logga in här</string>
+    <string name="username">Användarnamn</string>
+    <string name="password">Lösenord</string>
+    <string name="login">Logga in</string>
+    <string name="OK">OK</string>
+    <string name="yes">JA</string>
+    <string name="no">NEJ</string>
+    <string name="pleasewait">Vänta…</string>
+    <string name="something_went_wrong">Något gick fel</string>
+    <string name="check_internet_connection">Kontrollera din internetanslutning</string>
+    <string name="errEnterUserName">Ange användarnamn</string>
+    <string name="errPasswordLength">Var snäll och fyll i lösenordet</string>
+    <string name="error">Fel</string>
+    <string name="no_scanner_connected">Ingen skanner ansluten</string>
+    <string name="blank" />
+    <string name="cancel">Avbryt</string>
+    <string name="invalid_json_response">Ogiltigt JSON-svar</string>
+    <string name="sign_dollar">$</string>
+    <string name="product_confirm">Vill du bekräfta produkt (er)?</string>
+    <string name="cancel_purchase">Visst att du vill avbryta ditt köp?</string>
+    <string name="subtotal">Delsumma:</string>
+    <string name="taxes">Skatter:</string>
+    <string name="total">Totalt:</string>
+
+    <string name="log_in_change_url">ändra webbadress</string>
+    <string name="change_url_dialog_message">Vill du ändra appens URL?</string>
+    <string name="invalid_url">Ogiltig URL</string>
+    <string name="failed_to_connect">Det gick inte att ansluta</string>
+    <string name="try_again">Något gick fel, Försök igen senare</string>
+</resources>

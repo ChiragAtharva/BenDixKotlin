@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">BenDixKotlin</string>
+
+    <string name="ScanCustomerBarcode">Scan customer barcode</string>
+    <string name="scan_to_add_products">Scan to add products!</string>
+    <string name="ask_quotation">Ask quotation</string>
+    <string name="buy">Buy</string>
+    <string name="thank_you_for_your_order">Thank you for your order!</string>
+    <string name="msg_email_confirmation">An email has been sent with the confirmation!</string>
+    <string name="msg_contact_quotation">We will contact you shortly with our quotation!</string>
+    <string name="thank_you_for_your_request">Thank you for your request!</string>
+    <string name="order_details">Order details:</string>
+    <string name="order_number">Order number:</string>
+    <string name="quotation_number">Quotation number:</string>
+    <string name="quotation_products">Quotation products:</string>
+    <string name="log_in_here">Log In Here</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="OK">OK</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="pleasewait">Please wait…</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="check_internet_connection">Please check your internet connection</string>
+    <string name="errEnterUserName" >Please enter username</string>
+    <string name="errPasswordLength" >Please enter password</string>
+    <string name="error">Error</string>
+    <string name="no_scanner_connected">No Scanner Connected</string>
+    <string name="blank" />
+    <string name="cancel">Cancel</string>
+    <string name="invalid_json_response">Invalid JSON response</string>
+    <string name="sign_dollar">$</string>
+    <string name="product_confirm">Do you want to confirm product(s)?</string>
+    <string name="cancel_purchase">Sure you want to cancel your purchase?</string>
+    <string name="subtotal">Subtotal:</string>
+    <string name="taxes">Taxes:</string>
+    <string name="total">Total:</string>
+
+    <string name="log_in_change_url">change url</string>
+    <string name="change_url_dialog_message">Do you want to change the app URL?</string>
+    <string name="invalid_url">Invalid URL</string>
+    <string name="failed_to_connect">Failed to connect</string>
+    <string name="try_again">Something went wrong, please try again later</string>
+</resources>
