@@ -19,7 +19,7 @@ object APIClient {
 
         if (api == null) {
 
-            retrofit = retrofit2.Retrofit.Builder()
+            retrofit = Retrofit.Builder()
                 .baseUrl(APIConstants.BASE_URL)
                 .client(mClient())
                 .addConverterFactory(GsonConverterFactory.create(gson))

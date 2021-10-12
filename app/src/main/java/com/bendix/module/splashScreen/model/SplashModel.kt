@@ -1,17 +1,25 @@
 package com.bendix.module.splashScreen.model
 
-import com.bendix.module.scanCustomerBarcode.response.TokenResponse
-import org.json.JSONObject
+import com.bendix.module.splashScreen.response.TokenResponse
 import java.io.Serializable
 
 class SplashModel(): Serializable {
 
-    var data: JSONObject = JSONObject()
-
+    //var Token: String = ""
+    var Expired: String = ""
+    var type: String? = null
+    var message: String? = null
 
     constructor(response: TokenResponse): this(){
 
-        if (response != null)
-            this.data = response.data!!
+        //if (response.token != null)
+        //    this.Token = response.Token!!
+        if (response.Expired != null)
+            this.Expired = response.Expired!!
+        if (response.type != null)
+            this.type = response.type!!
+        if (response.message != null)
+            this.message = response.message!!
+
     }
 }

@@ -4,21 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bendix.R
 import com.bendix.databinding.ActivityLoginBinding
 import com.bendix.module.login.viewModel.LoginViewModel
-import com.bendix.module.scanCustomerBarcode.ScanCustomerBarcodeActivity
+import com.bendix.module.scanCustomerBarcode.scanCustomerBarcodeIntent
 import com.bendix.sharedpreference.SPConstants
 import com.bendix.sharedpreference.SPHelper
 import com.bendix.utility.*
-import com.bendix.webservice.interfaces.APICallListener
-import com.bendix.webservice.interfaces.APIKeys
-import org.json.JSONObject
-import java.lang.Exception
+import com.bendix.webservice.APIConstants
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var mContext: Context
@@ -31,15 +27,21 @@ class LoginActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         mContext = this
         initView()
+        setupObserver()
     }
 
     private fun initView() {
-        activityBinding.etUsername.setText("info@groning.fi")
-        activityBinding.etPassword.setText("atharva999")
-        val btnLogin: Button = findViewById(R.id.btn_login)
-        btnLogin.setOnClickListener(object : SingleClickListener() {
+        //activityBinding.etUsername.setText("info@groning.fi")
+        //activityBinding.etPassword.setText("atharva999")
+        activityBinding.btnLogin.setOnClickListener(object : SingleClickListener() {
             override fun onClicked(view: View?) {
                 validateData()
+            }
+        })
+
+        activityBinding.tvChangeUrl.setOnClickListener(object : SingleClickListener() {
+            override fun onClicked(view: View?) {
+                changeUrl()
             }
         })
     }
@@ -60,15 +62,12 @@ class LoginActivity : AppCompatActivity() {
     private fun submitData() {
         if (NetUtils.isNetworkAvailable(mContext)) {
             viewModel.callLogin(
-                mContext,
                 activityBinding.etUsername.text.toString(),
                 activityBinding.etPassword.text.toString(),
-                loginListener
             )
         } else {
             val dialogClass = AlertDialogClass(mContext)
             dialogClass.showSimpleDialog(
-                mContext,
                 "",
                 mContext.resources.getString(R.string.check_internet_connection),
                 mContext.resources.getString(R.string.OK)
@@ -76,41 +75,53 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private var loginListener: APICallListener = object : APICallListener {
-        override fun getResponse(response: String) {
+    private fun changeUrl() {
+        val alertDialogClass = AlertDialogClass(mContext)
+        alertDialogClass.changeURLDialog(mContext, APIConstants.URL, true)
+    }
+
+    private fun setupObserver() {
+        viewModel.messageEvent.observe(this, {
+            //if (!checkGenericEventAction(it)) {
             try {
-                val responseObject: JSONObject = JSONObject(response)
-                if (!responseObject.has(APIKeys.ApiResponse.TYPE)) {
-                    LogUtil.displayLogInfo(
-                        "LA",
-                        "Token ==>" + responseObject.getString(APIKeys.Login.Response.ACCESS_TOKEN)
-                    )
-                    SPHelper.setString(
-                        mContext, SPConstants.ACCESS_TOKEN,
-                        responseObject.getString(APIKeys.Login.Response.ACCESS_TOKEN)
-                    )
-                    SPHelper.setString(
-                        mContext, SPConstants.PARTNER_ID,
-                        responseObject.getString(APIKeys.Login.Response.PARTNER_ID)
-                    )
-                    SPHelper.setString(
-                        mContext, SPConstants.COMPANY_ID,
-                        responseObject.getString(APIKeys.Login.Response.COMPANY_ID)
-                    )
-                    SPHelper.setString(
-                        mContext, SPConstants.USER_ID,
-                        responseObject.getString(APIKeys.Login.Response.USER_ID)
-                    )
-                    val intent = Intent(mContext, ScanCustomerBarcodeActivity::class.java)
-                    startActivity(intent)
-                    finishAffinity()
+                if (viewModel.loginModel.type != null) {
+
+                    when (it) {
+                        Constants.SUCCESS_LOGIN -> {
+                            LogUtil.displayLogInfo(
+                                "LA",
+                                "Token ==>" + viewModel.loginModel.access_token
+                            )
+                            SPHelper.setString(
+                                mContext, SPConstants.ACCESS_TOKEN,
+                                viewModel.loginModel.access_token!!
+                            )
+                            SPHelper.setString(
+                                mContext, SPConstants.PARTNER_ID,
+                                viewModel.loginModel.partner_id!!
+                            )
+                            SPHelper.setString(
+                                mContext, SPConstants.COMPANY_ID,
+                                viewModel.loginModel.company_id!!
+                            )
+                            SPHelper.setString(
+                                mContext, SPConstants.USER_ID,
+                                viewModel.loginModel.uid!!
+                            )
+                            startActivity(scanCustomerBarcodeIntent())
+                            finishAffinity()
+                        }
+                        else -> {
+
+                        }
+                    }
                 } else {
-                    val dialogClass = AlertDialogClass(this@LoginActivity)
-                    if (responseObject.has(APIKeys.ApiResponse.MESSAGE)) {
+                    //show dialog
+                    val dialogClass = AlertDialogClass(mContext)
+                    if (viewModel.loginModel.message != null) {
                         dialogClass.showSimpleDialog(
-                            mContext,
                             "",
-                            responseObject.optString(APIKeys.ApiResponse.MESSAGE),
+                            viewModel.loginModel.message,
                             mContext.getString(R.string.OK)
                         )
                     }
@@ -118,6 +129,11 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
+            //}
+        })
     }
+}
+
+fun Context.loginIntent(): Intent {
+    return Intent(this, LoginActivity::class.java)
 }

@@ -4,7 +4,6 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.bendix.BR
 import com.bendix.utility.BindableDelegates
-import com.bendix.base.BR
 
 open class ParentBaseObservable : BaseObservable() {
 

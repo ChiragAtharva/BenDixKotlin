@@ -77,12 +77,13 @@ interface APIKeys {
             companion object {
                 const val TOKEN = "token"
                 const val BARCODE = "barcode"
+                const val UID = "uid"
             }
         }
 
         interface Response {
             companion object {
-                const val CUSTOMER_ID = "customer_id"
+                const val ID = "id"
                 const val NAME = "name"
                 const val PRICE_LIST = "pricelist"
                 const val ORDER_ID = "order_id"
@@ -97,7 +98,29 @@ interface APIKeys {
                 const val BARCODE = "barcode"
                 const val ORDER_ID = "order_id"
                 const val LINE_ID = "line_id"
-                const val QUANTITY = "qty"
+                const val QTY = "qty"
+                const val UID = "uid"
+            }
+        }
+
+        interface Response {
+            companion object {
+                const val ID = "id"
+                const val PRODUCT_ID = "product_id"
+                const val UID = "uid"
+                const val NAME = "name"
+                const val SALE_ORDER_LINE_ID = "saleorderline_id"
+                const val QUANTITY = "quantity"
+                const val PRICE = "price"
+                const val QTY = "qty"
+                const val ORDER = "order"
+                const val MESSAGE = "message"
+                const val PRODUCTS = "products"
+                const val DESCRIPTION = "description"
+                const val IMAGE_PATH = "image_path"
+                const val SUB_TOTAL = "sub_total"
+                const val TAX_AMOUNT = "tax_amount"
+                const val TOTAL = "total"
             }
         }
     }

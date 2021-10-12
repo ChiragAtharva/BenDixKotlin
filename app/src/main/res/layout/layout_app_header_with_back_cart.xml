@@ -1,60 +1,64 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/header"
-    android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:background="@color/black">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/iv_back"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:src="@mipmap/ic_back"
-        android:contentDescription="@string/blank" />
-
-    <LinearLayout
-        android:layout_marginEnd="@dimen/_8sdp"
-        android:id="@+id/view_cart"
-        android:layout_alignParentEnd="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal">
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/black">
 
         <ImageView
-            android:id="@+id/iv_cart"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginTop="8dp"
-            android:scaleX="-1"
-            android:src="@mipmap/ic_cart"
-            android:visibility="visible"
-            android:contentDescription="@string/blank" />
+            android:id="@+id/iv_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:contentDescription="@string/blank"
+            android:src="@mipmap/ic_back" />
 
-        <TextView
-            android:id="@+id/tc_item_count"
+        <LinearLayout
+            android:id="@+id/view_cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/badge_red_backgroud"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:minWidth="20dp"
-            android:minHeight="20dp"
-            android:padding="2dp"
-            android:layout_marginBottom="4dp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_10sdp" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/iv_cart"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/blank"
+                android:scaleX="-1"
+                android:src="@mipmap/ic_cart"
+                android:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/iv_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:contentDescription="@string/blank"
-        android:src="@mipmap/ic_logo" />
-</RelativeLayout>
+            <TextView
+                android:id="@+id/tc_item_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/badge_red_backgroud"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:padding="2dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10sdp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/blank"
+            android:src="@mipmap/ic_logo" />
+    </RelativeLayout>
+</layout>

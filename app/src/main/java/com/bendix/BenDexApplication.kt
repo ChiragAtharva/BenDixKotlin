@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.multidex.MultiDexApplication
 import com.bendix.helper.Foreground
+import com.bendix.webservice.APIConstants
 
 class BenDexApplication : MultiDexApplication() {
 
@@ -11,6 +12,7 @@ class BenDexApplication : MultiDexApplication() {
         super.onCreate()
         contextApp = applicationContext
         Foreground.init(this)
+        APIConstants.BASE_URL = BuildConfig.app_url
     }
 
     companion object {

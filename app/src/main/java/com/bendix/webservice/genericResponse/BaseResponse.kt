@@ -5,4 +5,5 @@ open class BaseResponse {
     var success: Boolean = false
     var token: String = ""
     var message: String? = null
+    var type: String? = null
 }

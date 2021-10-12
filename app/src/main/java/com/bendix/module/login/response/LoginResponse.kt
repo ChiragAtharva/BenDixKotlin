@@ -1,9 +1,10 @@
 package com.bendix.module.login.response
 
 import com.kotlinmvvmstructure.genericResponse.BaseResponse
-import org.json.JSONObject
 
 class LoginResponse: BaseResponse() {
-
-    var data: JSONObject? = null
+    var uid: String? = null
+    var company_id: String? = null
+    var partner_id: String? = null
+    var access_token: String? = null
 }

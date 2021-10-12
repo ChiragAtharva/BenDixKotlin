@@ -1,49 +1,34 @@
 package com.bendix.module.scanCustomerBarcode.viewModel
 
-import android.content.Context
-import com.bendix.R
 import com.bendix.base.BaseViewModel
-import com.bendix.module.scanCustomerBarcode.ScanCustomerBarcodeActivity
-import com.bendix.module.scanCustomerBarcode.model.SendTokenBody
 import com.bendix.module.scanCustomerBarcode.model.ScanCustomerBarcodeModel
-import com.bendix.module.scanCustomerBarcode.response.TokenResponse
-import com.bendix.utility.Common
+import com.bendix.module.scanCustomerBarcode.model.SendCustomerBody
+import com.bendix.module.scanCustomerBarcode.response.CustomerResponse
+import com.bendix.utility.Constants
 import com.bendix.webservice.APIClient
 import com.bendix.webservice.BaseCallback
-import com.bendix.webservice.interfaces.APICallListener
 
 class ScanCustomerBarcodeViewModel : BaseViewModel() {
     lateinit var barcodeModel: ScanCustomerBarcodeModel
-    fun validateLogin(
-        mContext: Context,
-        uid: String,
-        token: String,
-        apiCallListener: APICallListener
-    ) {
-        val sendTokenBody = SendTokenBody(uid, token)
 
-        APIClient.getApi()!!.validateToken(sendTokenBody)
+    fun getCustomer(
+        token: String,
+        uid: String,
+        barcode: String
+    ) {
+        val sendCustomerBody = SendCustomerBody(uid, token, barcode)
+
+        APIClient.getApi()!!.getCustomer(sendCustomerBody)
             .enqueue(
-                BaseCallback(object : BaseCallback.OnCallback<TokenResponse> {
-                    override fun status(response: TokenResponse?, message: String) {
+                BaseCallback(object : BaseCallback.OnCallback<CustomerResponse> {
+                    override fun status(response: CustomerResponse?, message: String) {
+
                         if (response != null) {
                             barcodeModel = ScanCustomerBarcodeModel(response)
-                            when {
-                                Common.isJSONValid(response.toString()) -> apiCallListener.getResponse(
-                                    response.toString()
-                                )
-                                mContext is ScanCustomerBarcodeActivity -> (mContext as ScanCustomerBarcodeActivity).handleSplashNavigation()
-                                else -> Common.showAlert(
-                                    mContext,
-                                    mContext.getString(R.string.error),
-                                    mContext.getString(R.string.invalid_json_response)
-                                )
-                            }
-                            //messageEvent.value = ApplicationConstants.SUCCESS_SEND_OTP
+                            //apiCallListener.getResponse(response.toString())
+                            messageEvent.value = Constants.SUCCESS_GET_CUSTOMER
                         } else
-                            if (mContext is ScanCustomerBarcodeActivity)
-                                mContext.handleSplashNavigation()
-                        messageEvent.value = message
+                            messageEvent.value = message
                     }
                 })
             )

@@ -4,15 +4,14 @@ import ConfirmProduct
 import java.util.ArrayList
 
 class DataUtils {
+    var products: ArrayList<ConfirmProduct>? = null
 
-    private var dataUtils: DataUtils? = null
-
-    var products: ArrayList<ConfirmProduct?>? = null
-
-    val instance: DataUtils?
-        get() {
-            if (dataUtils == null) dataUtils = DataUtils()
-            return dataUtils
-        }
-
+    companion object {
+        private var dataUtils: DataUtils? = null
+        val instance: DataUtils?
+            get() {
+                if (dataUtils == null) dataUtils = DataUtils()
+                return dataUtils
+            }
+    }
 }

@@ -1,40 +1,38 @@
 package com.bendix.module.splashScreen
 
 import android.content.Context
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bendix.R
 import com.bendix.databinding.ActivitySplashBinding
-import com.bendix.module.login.LoginActivity
-import com.bendix.module.scanCustomerBarcode.ScanCustomerBarcodeActivity
-import com.bendix.module.scanCustomerBarcode.viewModel.ScanCustomerBarcodeViewModel
+import com.bendix.module.login.loginIntent
+import com.bendix.module.scanCustomerBarcode.scanCustomerBarcodeIntent
+import com.bendix.module.splashScreen.viewModel.SplashScreenViewModel
 import com.bendix.sharedpreference.SPConstants
 import com.bendix.sharedpreference.SPHelper
+import com.bendix.utility.AlertDialogClass
 import com.bendix.utility.Constants
 import com.bendix.utility.LanguageUtils.changeLanguage
 import com.bendix.utility.LogUtil
 import com.bendix.utility.NetUtils
-import com.bendix.webservice.interfaces.APICallListener
-import com.bendix.webservice.interfaces.APIKeys
-import org.json.JSONObject
-import java.lang.Exception
-
+import java.lang.Boolean
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var mContext: Context
-    private lateinit var viewModel: ScanCustomerBarcodeViewModel
+    private lateinit var viewModel: SplashScreenViewModel
     private lateinit var activityBinding: ActivitySplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
-        viewModel = ViewModelProvider(this).get(ScanCustomerBarcodeViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(SplashScreenViewModel::class.java)
         mContext = this
+
+        setupObserver()
 
         //Set Language
         changeLanguage(this)
@@ -44,48 +42,15 @@ class SplashActivity : AppCompatActivity() {
                     mContext,
                     SPHelper.getString(this, SPConstants.USER_ID)!!,
                     SPHelper.getString(this, SPConstants.ACCESS_TOKEN)!!,
-                    validateTokenListener
                 )
             } else {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(this, LoginActivity::class.java)
-                    startActivity(intent)
+                    startActivity(loginIntent())
                     finish()
                 }, Constants.SPLASH_DISPLAY_LENGTH)
             }
         } else {
             handleSplashNavigation()
-        }
-    }
-
-    private var validateTokenListener: APICallListener = object : APICallListener {
-        override fun getResponse(response: String) {
-            try {
-                val responseObject = JSONObject(response)
-                val isExpired = responseObject.optBoolean(APIKeys.ValidateToken.Response.EXPIRED)
-                if (isExpired) {
-                    //Clear Preference
-                    SPHelper.clearPref(this@SplashActivity)
-                    //Check - Access Token exist
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        val mainIntent = Intent(this@SplashActivity, LoginActivity::class.java)
-                        startActivity(mainIntent)
-                        finish()
-                    }, Constants.SPLASH_DISPLAY_LENGTH)
-                } else {
-                    //Check - Access Token exist
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        val mainIntent = Intent(
-                            this@SplashActivity,
-                            ScanCustomerBarcodeActivity::class.java
-                        )
-                        startActivity(mainIntent)
-                        finish()
-                    }, Constants.SPLASH_DISPLAY_LENGTH)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
         }
     }
 
@@ -99,14 +64,57 @@ class SplashActivity : AppCompatActivity() {
                 )
             )
             if (SPHelper.getString(this@SplashActivity, SPConstants.ACCESS_TOKEN) != null) {
-                val mainIntent =
-                    Intent(this@SplashActivity, ScanCustomerBarcodeActivity::class.java)
-                startActivity(mainIntent)
+                startActivity(scanCustomerBarcodeIntent())
             } else {
-                val mainIntent = Intent(this@SplashActivity, LoginActivity::class.java)
-                startActivity(mainIntent)
+                startActivity(loginIntent())
             }
             finish()
         }, Constants.SPLASH_DISPLAY_LENGTH)
+    }
+
+    private fun setupObserver() {
+        viewModel.messageEvent.observe(this, {
+            //if (!checkGenericEventAction(it)) {
+            try {
+                if (viewModel.splashModel.type != null) {
+
+                    when (it) {
+                        Constants.SUCCESS_TOKEN -> {
+                            if (Boolean.parseBoolean(viewModel.splashModel.Expired)) {
+                                //Clear Preference
+                                SPHelper.clearPref(this@SplashActivity)
+                                //Check - Access Token exist
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    startActivity(loginIntent())
+                                    finish()
+                                }, Constants.SPLASH_DISPLAY_LENGTH)
+                            } else {
+                                //Check - Access Token exist
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    startActivity(scanCustomerBarcodeIntent())
+                                    finish()
+                                }, Constants.SPLASH_DISPLAY_LENGTH)
+                            }
+                        }
+                        else -> {
+
+                        }
+                    }
+                } else {
+                    //show dialog
+                    val dialogClass = AlertDialogClass(mContext)
+                    if (viewModel.splashModel.message != null) {
+                        dialogClass.showSimpleDialog(
+                            "",
+                            viewModel.splashModel.message,
+                            mContext.getString(R.string.OK)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            //}
+        })
     }
 }

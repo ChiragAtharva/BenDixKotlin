@@ -2,34 +2,22 @@ package com.bendix.module.scanCustomerBarcode
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bendix.R
 import com.bendix.base.BaseActivity
 import com.bendix.databinding.ActivityScanCustomerBarcodeBinding
-import com.bendix.databinding.ActivitySplashBinding
-import com.bendix.module.login.LoginActivity
+import com.bendix.module.product.productIntent
 import com.bendix.module.scanCustomerBarcode.viewModel.ScanCustomerBarcodeViewModel
 import com.bendix.sharedpreference.SPConstants
 import com.bendix.sharedpreference.SPHelper
 import com.bendix.utility.AlertDialogClass
 import com.bendix.utility.Constants
-import com.bendix.utility.LanguageUtils.changeLanguage
 import com.bendix.utility.LogUtil
 import com.bendix.utility.NetUtils
-import com.bendix.webservice.interfaces.APICallListener
-import com.bendix.webservice.interfaces.APIKeys
 import com.symbol.emdk.barcode.ScanDataCollection
-import com.symbol.emdk.barcode.ScanDataCollection.ScanData
 import com.symbol.emdk.barcode.ScannerResults
-import org.json.JSONObject
-import java.lang.Exception
-
 
 class ScanCustomerBarcodeActivity : BaseActivity() {
     private lateinit var mContext: Context
@@ -45,6 +33,7 @@ class ScanCustomerBarcodeActivity : BaseActivity() {
         mContext = this
 
         activityBinding.llScanBarcode.setOnClickListener { v -> softScan(v) }
+        setupObserver()
     }
 
     override fun onDestroy() {
@@ -79,12 +68,12 @@ class ScanCustomerBarcodeActivity : BaseActivity() {
                 "SCBA",
                 "getCustomerInfo - Uid :" + SPHelper.getString(mContext, SPConstants.USER_ID)
             )
-            /*Customer(mContext, customerAPICallListener).getCustomer(
-                SPHelper.getString(
-                    mContext,
-                    SPConstants.ACCESS_TOKEN
-                ), SPHelper.getString(mContext, SPConstants.USER_ID), scannedBarcode
-            )*/
+            viewModel.getCustomer(
+                SPHelper.getString(mContext, SPConstants.ACCESS_TOKEN)!!,
+                SPHelper.getString(mContext, SPConstants.USER_ID)!!,
+                scannedBarcode!!,
+                //customerAPICallListener
+            )
         } else {
             runOnUiThread {
                 AlertDialogClass(mContext).showSimpleDialog(
@@ -96,14 +85,45 @@ class ScanCustomerBarcodeActivity : BaseActivity() {
         }
     }
 
-    private var validateTokenListener: APICallListener = object : APICallListener {
-        override fun getResponse(response: String) {
+    private fun setupObserver() {
+        viewModel.messageEvent.observe(this, {
+            //if (!checkGenericEventAction(it)) {
             try {
-                val responseObject = JSONObject(response)
+                if (viewModel.barcodeModel.type != null) {
 
+                    when (it) {
+                        Constants.SUCCESS_GET_CUSTOMER -> {
+                            startActivity(
+                                productIntent(
+                                    viewModel.barcodeModel.id,
+                                    viewModel.barcodeModel.order_id,
+                                    viewModel.barcodeModel.name
+                                )
+                            )
+                        }
+                        else -> {
+
+                        }
+                    }
+                } else {
+                    //show dialog
+                    val dialogClass = AlertDialogClass(mContext)
+                    if (viewModel.barcodeModel.message != null) {
+                        dialogClass.showSimpleDialog(
+                            "",
+                            viewModel.barcodeModel.message,
+                            mContext.getString(R.string.OK)
+                        )
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
+            //}
+        })
     }
+}
+
+fun Context.scanCustomerBarcodeIntent(): Intent {
+    return Intent(this, ScanCustomerBarcodeActivity::class.java)
 }

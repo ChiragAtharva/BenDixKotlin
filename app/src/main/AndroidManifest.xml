@@ -47,6 +47,9 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".module.scanCustomerBarcode.ScanCustomerBarcodeActivity" />
+        <activity android:name=".module.product.ProductActivity" />
+        <activity android:name=".module.confirmOrder.ConfirmOrderActivity" />
+        <activity android:name=".module.requestQuotation.RequestQuotationActivity" />
     </application>
 
 </manifest>
