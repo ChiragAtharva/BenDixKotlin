@@ -185,6 +185,7 @@ class ProductActivity : BaseActivity() {
     private fun getProductInformation(barcode: String?) {
         if (NetUtils.isNetworkAvailable(mContext!!)) {
             viewModel.getProductInformation(
+                mContext!!,
                 SPHelper.getString(mContext!!, SPConstants.ACCESS_TOKEN)!!,
                 SPHelper.getString(mContext!!, SPConstants.USER_ID)!!,
                 barcode!!
@@ -201,6 +202,7 @@ class ProductActivity : BaseActivity() {
     private fun getProducts(barcode: String) {
         if (NetUtils.isNetworkAvailable(mContext!!)) {
             viewModel.getProductSalesOrder(
+                mContext!!,
                 SPHelper.getString(mContext!!, SPConstants.ACCESS_TOKEN)!!,
                 SPHelper.getString(mContext!!, SPConstants.USER_ID)!!,
                 barcode,
@@ -219,6 +221,7 @@ class ProductActivity : BaseActivity() {
         if (NetUtils.isNetworkAvailable(mContext!!)) {
             updatingProduct = product
             viewModel.updateQuantity(
+                mContext!!,
                 SPHelper.getString(mContext!!, SPConstants.ACCESS_TOKEN)!!,
                 SPHelper.getString(mContext!!, SPConstants.USER_ID)!!,
                 orderId.toString(),
@@ -240,6 +243,7 @@ class ProductActivity : BaseActivity() {
 
     private fun confirmOrder() {
         viewModel.confirmOrder(
+            mContext,
             SPHelper.getString(mContext!!, SPConstants.ACCESS_TOKEN)!!,
             SPHelper.getString(mContext!!, SPConstants.USER_ID)!!,
             orderId.toString()
@@ -248,6 +252,7 @@ class ProductActivity : BaseActivity() {
 
     private fun askQuotation() {
         viewModel.getQuotation(
+            mContext,
             SPHelper.getString(mContext!!, SPConstants.ACCESS_TOKEN)!!,
             SPHelper.getString(mContext!!, SPConstants.USER_ID)!!,
             orderId.toString()

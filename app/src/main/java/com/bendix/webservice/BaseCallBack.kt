@@ -2,7 +2,7 @@ package com.bendix.webservice
 
 import com.bendix.BenDexApplication
 import com.bendix.R
-import com.bendix.utility.Common
+import com.bendix.utility.Common.showAlert
 import com.bendix.utility.Common.showAlertWithLogout
 import com.bendix.utility.Constants
 import com.bendix.utility.LogUtil
@@ -15,7 +15,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 import java.util.*
-import kotlin.collections.ArrayList
 
 open class BaseCallback<T>(private val listener: OnCallback<T>) : Callback<T> {
     private val TAG = javaClass.simpleName
@@ -24,30 +23,71 @@ open class BaseCallback<T>(private val listener: OnCallback<T>) : Callback<T> {
             response.isSuccessful -> {
                 when {
                     response.body() is ResponseBody -> listener.status(response.body(), "")
-                    (response.body() as BaseResponse).success -> listener.status(response.body(), "")
+                    (response.body() as BaseResponse).success -> listener.status(
+                        response.body(),
+                        ""
+                    )
 
                     else -> {
                         val errorMessage = Objects.requireNonNull(response.errorBody())
                             ?.string()
                         LogUtil.displayLogError(TAG, errorMessage!!)
                         listener.status(null, errorMessage.toString())
+                        showAlert(
+                            BenDexApplication.contextApp,
+                            BenDexApplication.contextApp.getString(R.string.error),
+                            errorMessage.toString()
+                        )
                     }
                 }
             }
-            (response.code() == 403) -> {
-                val responseObject = JSONObject(response.toString())
-                val errorMessage: String = responseObject.optString(APIKeys.ApiResponse.MESSAGE)
-                //showAlertWithLogout(mContext, mContext.getString(R.string.error), errorMessage)
+            (response.code() == Constants.TOKEN_EXPIRED_CODE) -> {
+                val errorMessage1 = Objects.requireNonNull(response.errorBody())
+                    ?.string()
+                if (errorMessage1!!.contains(APIConstants.ERROR_TOKEN_EXPIRED)) {
+                    showAlertWithLogout(
+                        BenDexApplication.contextApp,
+                        BenDexApplication.contextApp.getString(R.string.error),
+                        errorMessage1
+                    )
+                } else {
+                    var message: String = errorMessage1
+                    try {
+                        val responseObject = JSONObject(errorMessage1)
+                        message = responseObject.optString(APIKeys.ApiResponse.MESSAGE)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    } finally {
+                        showAlert(
+                            BenDexApplication.contextApp,
+                            BenDexApplication.contextApp.getString(R.string.error),
+                            message
+                        )
+                    }
+                }
                 listener.status(null, Constants.TOKEN_EXPIRED_CODE.toString())
             }
             (response.code() in 502..503) -> {
-                listener.status(null,
+                listener.status(
+                    null,
                     Objects.requireNonNull(response.errorBody())
-                        !!.string())
+                    !!.string()
+                )
+                showAlert(
+                    BenDexApplication.contextApp,
+                    BenDexApplication.contextApp.getString(R.string.app_name),
+                    Objects.requireNonNull(response.errorBody())
+                    !!.string()
+                )
             }
 
             else -> {
                 listener.status(null, BenDexApplication.contextApp.getString(R.string.try_again))
+                showAlert(
+                    BenDexApplication.contextApp,
+                    BenDexApplication.contextApp.getString(R.string.app_name),
+                    BenDexApplication.contextApp.getString(R.string.try_again)
+                )
             }
         }
     }
@@ -70,19 +110,34 @@ open class BaseCallback<T>(private val listener: OnCallback<T>) : Callback<T> {
         LogUtil.displayLog(TAG, "API: url: $url")
 
         //Check - error
-
-        //Check - error
         if (Objects.requireNonNull(t.message)
-                !!.contains(APIKeys.ApiErrors.API_ERROR_NO_ADDRESS_ASSOCIATED_WITH_HOSTNAME)
+            !!.contains(APIKeys.ApiErrors.API_ERROR_NO_ADDRESS_ASSOCIATED_WITH_HOSTNAME)
             || t.message!!.contains(APIKeys.ApiErrors.API_ERROR_UNABLE_TO_RESOLVE_HOST)
         ) {
-            BenDexApplication.contextApp.getString(R.string.check_internet_connection)
+            showAlert(
+                BenDexApplication.contextApp,
+                BenDexApplication.contextApp.getString(R.string.app_name),
+                BenDexApplication.contextApp.getString(R.string.check_internet_connection)
+            )
         } else if (t.toString().contains(APIKeys.ApiErrors.API_ERROR_FAILED_TO_CONNECT)) {
-            BenDexApplication.contextApp.getString(R.string.check_internet_connection)
+            showAlert(
+                BenDexApplication.contextApp,
+                BenDexApplication.contextApp.getString(R.string.app_name),
+                BenDexApplication.contextApp.getString(R.string.check_internet_connection)
+            )
         } else if (t.toString().contains(APIKeys.ApiErrors.API_ERROR_TIMEOUT)) {
-            BenDexApplication.contextApp.getString(R.string.check_internet_connection)
+            showAlert(
+                BenDexApplication.contextApp,
+                BenDexApplication.contextApp.getString(R.string.app_name),
+                BenDexApplication.contextApp.getString(R.string.check_internet_connection)
+            )
         } else {
             listener.status(null, errorMessage)
+            showAlert(
+                BenDexApplication.contextApp,
+                BenDexApplication.contextApp.getString(R.string.app_name),
+                errorMessage
+            )
         }
     }
 

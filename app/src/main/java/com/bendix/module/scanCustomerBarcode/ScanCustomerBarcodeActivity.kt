@@ -69,6 +69,7 @@ class ScanCustomerBarcodeActivity : BaseActivity() {
                 "getCustomerInfo - Uid :" + SPHelper.getString(mContext, SPConstants.USER_ID)
             )
             viewModel.getCustomer(
+                mContext,
                 SPHelper.getString(mContext, SPConstants.ACCESS_TOKEN)!!,
                 SPHelper.getString(mContext, SPConstants.USER_ID)!!,
                 scannedBarcode!!,

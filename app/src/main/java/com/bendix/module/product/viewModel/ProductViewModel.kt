@@ -1,16 +1,19 @@
 package com.bendix.module.product.viewModel
 
+import android.content.Context
 import com.bendix.base.BaseViewModel
 import com.bendix.module.product.model.*
 import com.bendix.module.product.response.ProductInfoResponse
 import com.bendix.utility.Constants
+import com.bendix.utility.ProgressDialogUtil
 import com.bendix.webservice.APIClient
 import com.bendix.webservice.BaseCallback
 
 class ProductViewModel : BaseViewModel() {
-    lateinit var productInfoModel: ProductInfoModel
+    var productInfoModel = ProductInfoModel()
 
-    fun getProductInformation(token: String, userId: String, barcode: String) {
+    fun getProductInformation(mContext: Context, token: String, userId: String, barcode: String) {
+        ProgressDialogUtil.getInstance()!!.showThreadedProgressBar(mContext)
         val productInfoRequestBody = ProductInfoRequestBody(token, userId, barcode)
         APIClient.getApi()!!.getProductInformation(productInfoRequestBody)
             .enqueue(
@@ -27,7 +30,14 @@ class ProductViewModel : BaseViewModel() {
             )
     }
 
-    fun getProductSalesOrder(token: String, userId: String, barcode: String, orderId: String) {
+    fun getProductSalesOrder(
+        mContext: Context,
+        token: String,
+        userId: String,
+        barcode: String,
+        orderId: String
+    ) {
+        ProgressDialogUtil.getInstance()!!.showThreadedProgressBar(mContext)
         val productSalesOrderRequestBody =
             ProductSalesOrderRequestBody(token, userId, barcode, orderId)
         APIClient.getApi()!!.getProductSalesOrder(productSalesOrderRequestBody)
@@ -46,6 +56,7 @@ class ProductViewModel : BaseViewModel() {
     }
 
     fun updateQuantity(
+        mContext: Context,
         token: String,
         uid: String,
         orderId: String,
@@ -59,6 +70,7 @@ class ProductViewModel : BaseViewModel() {
             orderId,
             qty.toString()
         )
+        ProgressDialogUtil.getInstance()!!.showThreadedProgressBar(mContext)
         APIClient.getApi()!!.getUpdateOrderQuantity(updateQuantityRequestBody)
             .enqueue(
                 BaseCallback(object : BaseCallback.OnCallback<ProductInfoResponse> {
@@ -75,6 +87,7 @@ class ProductViewModel : BaseViewModel() {
     }
 
     fun confirmOrder(
+        mContext: Context?,
         token: String,
         uid: String,
         orderId: String
@@ -84,6 +97,7 @@ class ProductViewModel : BaseViewModel() {
             uid,
             orderId
         )
+        ProgressDialogUtil.getInstance()!!.showThreadedProgressBar(mContext)
         APIClient.getApi()!!.getConfirmOrder(confirmOrderRequestBody)
             .enqueue(
                 BaseCallback(object : BaseCallback.OnCallback<ProductInfoResponse> {
@@ -99,12 +113,13 @@ class ProductViewModel : BaseViewModel() {
             )
     }
 
-    fun getQuotation(token: String, uid: String, orderId: String) {
+    fun getQuotation(mContext: Context?, token: String, uid: String, orderId: String) {
         val askQuotationRequestBody = AskQuotationRequestBody(
             token,
             uid,
             orderId
         )
+        ProgressDialogUtil.getInstance()!!.showThreadedProgressBar(mContext)
         APIClient.getApi()!!.getQuotation(askQuotationRequestBody)
             .enqueue(
                 BaseCallback(object : BaseCallback.OnCallback<ProductInfoResponse> {

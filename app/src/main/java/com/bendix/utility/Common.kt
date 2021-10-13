@@ -182,15 +182,17 @@ object Common {
     fun unableToProcessRequest(mContext: Context, message: String) {
         try {
             ProgressDialogUtil.getInstance()!!.hideProgressBar(mContext)
-            if (message.length > 0) showAlert(
-                mContext,
-                mContext.getString(R.string.app_name),
-                message
-            ) else showAlert(
-                mContext,
-                mContext.getString(R.string.app_name),
-                mContext.getString(R.string.check_internet_connection)
-            )
+            if (message.isNotEmpty())
+                showAlert(
+                    mContext,
+                    mContext.getString(R.string.app_name),
+                    message
+                ) else
+                showAlert(
+                    mContext,
+                    mContext.getString(R.string.app_name),
+                    mContext.getString(R.string.check_internet_connection)
+                )
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -31,8 +31,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        //activityBinding.etUsername.setText("info@groning.fi")
-        //activityBinding.etPassword.setText("atharva999")
+        activityBinding.etUsername.setText("info@groning.fi")
+        activityBinding.etPassword.setText("atharva999")
         activityBinding.btnLogin.setOnClickListener(object : SingleClickListener() {
             override fun onClicked(view: View?) {
                 validateData()
@@ -62,6 +62,7 @@ class LoginActivity : AppCompatActivity() {
     private fun submitData() {
         if (NetUtils.isNetworkAvailable(mContext)) {
             viewModel.callLogin(
+                mContext,
                 activityBinding.etUsername.text.toString(),
                 activityBinding.etPassword.text.toString(),
             )

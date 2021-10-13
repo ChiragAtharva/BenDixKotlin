@@ -20,12 +20,13 @@ android {
 
     buildTypes {
         release {
-            buildConfigField 'String', 'app_url', '"https://bendix.fi"'
+            //buildConfigField 'String', 'app_url', '"https://bendix.fi"'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            buildConfigField 'String', 'app_url', '"http://95.216.160.221:8069"'
+            //buildConfigField 'String', 'app_url', '"http://95.216.160.221:8069"'
+            buildConfigField 'String', 'app_url', '"https://bendix.fi"'
         }
     }
     compileOptions {

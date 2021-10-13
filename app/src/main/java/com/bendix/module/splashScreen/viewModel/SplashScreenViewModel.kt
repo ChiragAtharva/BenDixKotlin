@@ -11,7 +11,7 @@ import com.bendix.webservice.APIClient
 import com.bendix.webservice.BaseCallback
 
 class SplashScreenViewModel : BaseViewModel() {
-    lateinit var splashModel: SplashModel
+    var splashModel = SplashModel()
     fun validateLogin(
         mContext: Context,
         uid: String,
