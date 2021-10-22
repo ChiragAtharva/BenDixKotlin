@@ -1,10 +1,12 @@
 package com.bendix.module.login.viewModel
 
 import android.content.Context
+import com.bendix.R
 import com.bendix.base.BaseViewModel
 import com.bendix.module.login.model.LoginModel
 import com.bendix.module.login.model.SendLoginBody
 import com.bendix.module.login.response.LoginResponse
+import com.bendix.utility.Common.showAlert
 import com.bendix.utility.Constants
 import com.bendix.utility.ProgressDialogUtil
 import com.bendix.webservice.APIClient
@@ -28,8 +30,14 @@ class LoginViewModel : BaseViewModel() {
                         if (response != null) {
                             loginModel = LoginModel(response)
                             messageEvent.value = Constants.SUCCESS_LOGIN
-                        } else
+                        } else {
                             messageEvent.value = message
+                            showAlert(
+                                mContext,
+                                mContext.getString(R.string.app_name),
+                                message
+                            )
+                        }
                     }
                 })
             )

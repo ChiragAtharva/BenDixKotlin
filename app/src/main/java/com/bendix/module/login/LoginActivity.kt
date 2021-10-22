@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.bendix.BuildConfig
 import com.bendix.R
 import com.bendix.databinding.ActivityLoginBinding
 import com.bendix.module.login.viewModel.LoginViewModel
@@ -31,8 +32,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        activityBinding.etUsername.setText("info@groning.fi")
-        activityBinding.etPassword.setText("atharva999")
+        if (BuildConfig.DEBUG) {
+            activityBinding.etUsername.setText("info@groning.fi")
+            activityBinding.etPassword.setText("atharva999")
+        }
         activityBinding.btnLogin.setOnClickListener(object : SingleClickListener() {
             override fun onClicked(view: View?) {
                 validateData()
